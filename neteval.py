@@ -42,7 +42,6 @@ def getcostderivs(dataset,thetas,shape,lamb): #returns the gradients for a list 
             for b in range(len(nodes[a])):
                 nodes[a][b] = 0
         
-        print(nodes)
         fwdprop = neteval(data[0],weights)
         
         for x in range(1,len(nodes[-1])):    #computing backprop for final layer of nodes
