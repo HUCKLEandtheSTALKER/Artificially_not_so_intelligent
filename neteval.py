@@ -16,13 +16,11 @@ def getcost(dataset,thetas,shape,lamb): #returns a cost value to be minimised
     cost /= (-1 * len(dataset))
     
     weightsum = 0    #computing cost in regularisation
-    weightnum = 0
     for a in weights:
         for b in a:   
             for c in b[1:]:
                 weightsum += c**2
-                weightnum += 1
-    cost += weightsum * (lamb / (2 * weightnum))
+    cost += weightsum * (lamb / (2 * len(data)))
     
     return cost
 
