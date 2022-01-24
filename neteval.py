@@ -6,13 +6,14 @@ from math import exp, log
 #shape does not take into account the 1.0's in each layer
 #lamb specifies the weight of regularisation
 
-def getcost(dataset,thetas,shape,lamb): #returns a cost value to be minimised
+def getcost(thetas,dataset,shape,lamb): #returns a cost value to be minimised
     weights = inflate(thetas,shape)
     cost = 0
     for data in dataset:
         ev = neteval(data[0],weights)  #computing cost in output
         for x in range(1,len(ev[-1])):
-            cost += data[1][x-1] * log(ev[-1][x]) + (1 - data[1][x-1]) * log(1 - ev[-1][x])
+            if ev[-1][x] != data[1][x-1]:
+                cost += data[1][x-1] * log(ev[-1][x]) + (1 - data[1][x-1]) * log(1 - ev[-1][x])
     cost /= (-1 * len(dataset))
     
     weightsum = 0    #computing cost in regularisation
@@ -20,11 +21,11 @@ def getcost(dataset,thetas,shape,lamb): #returns a cost value to be minimised
         for b in a:   
             for c in b[1:]:
                 weightsum += c**2
-    cost += weightsum * (lamb / (2 * len(data)))
+    cost += weightsum * (lamb / (2 * len(dataset)))
     
     return cost
 
-def getcostderivs(dataset,thetas,shape,lamb): #returns the gradients for a list of thetas, in a list
+def getcostderivs(thetas,dataset,shape,lamb): #returns the gradients for a list of thetas, in a list
     weights = inflate(thetas,shape)
     derivs = []
     nodes = []
@@ -81,7 +82,10 @@ def neteval(inputs,weights): #returns the value at each node after foreward prop
     return fwdprop
 
 def sig(x): # applies the sigmoid function
-    return (1 / (1 + exp(x * -1)))
+    if x < -709:
+        return(0.0)
+    else:
+        return (1 / (1 + exp(x * -1)))
     
 def inflate(thetas,shape): # using the specified shape of the neural net, takes a 1d list of thetas and returns a 3d list of these
     weights = []
@@ -119,3 +123,4 @@ if __name__ == '__main__': #test using a simple neural net shape with one hidden
     print(neteval(inputs,inflate(thetas,shape)))
     print(getcost(dataset,thetas,shape,lamb))
     print(getcostderivs(dataset,thetas,shape,lamb))
+    
