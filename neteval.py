@@ -13,7 +13,10 @@ def getcost(thetas,dataset,shape,lamb): #returns a cost value to be minimised
         ev = neteval(data[0],weights)  #computing cost in output
         for x in range(1,len(ev[-1])):
             if ev[-1][x] != data[1][x-1]:
-                cost += data[1][x-1] * log(ev[-1][x]) + (1 - data[1][x-1]) * log(1 - ev[-1][x])
+                if abs(ev[-1][x] - data[1][x-1]) == 1:
+                    cost += -9999999999.0
+                else:
+                    cost += data[1][x-1] * log(ev[-1][x]) + (1 - data[1][x-1]) * log(1 - ev[-1][x])
     cost /= (-1 * len(dataset))
     
     weightsum = 0    #computing cost in regularisation
@@ -23,6 +26,7 @@ def getcost(thetas,dataset,shape,lamb): #returns a cost value to be minimised
                 weightsum += c**2
     cost += weightsum * (lamb / (2 * len(dataset)))
     
+    print(cost)
     return cost
 
 def getcostderivs(thetas,dataset,shape,lamb): #returns the gradients for a list of thetas, in a list
