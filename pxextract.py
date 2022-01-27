@@ -9,7 +9,15 @@ def getpxdata(img):
 
 def imgtopx(imag):
     ret = []
-    for px in list(imag.getdata()):
-        ret.append(px[0])
-        
-    return ret
+    if imag.format == "PNG":
+        for px in list(imag.getdata()):
+            ret.append(255-px[3])
+        return ret
+    else:
+        l = list(imag.getdata())
+        if type(l[0]) == type((1,2)):
+            for px in l:
+                ret.append(px[0])
+            return ret
+        else:
+            return l
